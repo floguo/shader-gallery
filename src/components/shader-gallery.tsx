@@ -196,7 +196,7 @@ function WarmDaySky() {
   return (
     <mesh ref={mesh} scale={[2, 2, 1]} position={[0, 0, -1]}>
       <planeGeometry args={[1, 1]} />
-      {/* @ts-ignore */}
+      {/* @ts-expect-error */}
       <warmDaySkyMaterial />
     </mesh>
   )
@@ -216,7 +216,7 @@ function AnimatedSun() {
   return (
     <mesh ref={mesh} scale={[2, 2, 1]} position={[0, 0, -0.5]}>
       <planeGeometry args={[1, 1]} />
-      {/* @ts-ignore */}
+      {/* @ts-expect-error */}
       <animatedSunMaterial transparent blending={THREE.AdditiveBlending} />
     </mesh>
   )
@@ -243,7 +243,7 @@ function SunRays() {
   return (
     <mesh ref={mesh} scale={[2, 2, 1]} position={[0, 0, -0.4]}>
       <planeGeometry args={[1, 1]} />
-      {/* @ts-ignore */}
+      {/* @ts-expect-error */}
       <sunRaysMaterial transparent blending={THREE.AdditiveBlending} />
     </mesh>
   )
