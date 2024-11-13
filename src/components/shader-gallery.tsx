@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { Dialog, DialogContent } from "@/components/ui/dialog"
-import { shaders, Shader } from './shaders'
+import { shaders, Shader } from '@/lib/shaders'
 
 function ShaderPreview({ shader, onClick, isPlaying, togglePlay, onHover }: {
   shader: Shader;
@@ -13,8 +13,8 @@ function ShaderPreview({ shader, onClick, isPlaying, togglePlay, onHover }: {
   onHover: (id: number) => void;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const timeRef = useRef(0);
   const lastFrameTimeRef = useRef(0);
-  const startTimeRef = useRef(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -25,11 +25,14 @@ function ShaderPreview({ shader, onClick, isPlaying, togglePlay, onHover }: {
 
     let animationFrameId: number;
 
-    const render = (time: number) => {
-      if (!startTimeRef.current) startTimeRef.current = time;
-      const elapsedTime = (time - startTimeRef.current) * 0.001; // Convert to seconds
-      shader.shader(ctx, elapsedTime);
-      lastFrameTimeRef.current = elapsedTime;
+    const render = (timestamp: number) => {
+      if (isPlaying) {
+        const deltaTime = (timestamp - lastFrameTimeRef.current) / 1000;
+        timeRef.current += deltaTime;
+        lastFrameTimeRef.current = timestamp;
+      }
+
+      shader.shader(ctx, timeRef.current);
       
       if (isPlaying) {
         animationFrameId = requestAnimationFrame(render);
@@ -37,11 +40,10 @@ function ShaderPreview({ shader, onClick, isPlaying, togglePlay, onHover }: {
     };
 
     if (isPlaying) {
-      startTimeRef.current = 0; // Reset start time when animation starts
+      lastFrameTimeRef.current = performance.now();
       animationFrameId = requestAnimationFrame(render);
     } else {
-      // Render the last frame when not playing
-      shader.shader(ctx, lastFrameTimeRef.current);
+      render(lastFrameTimeRef.current);
     }
 
     return () => {
@@ -78,7 +80,7 @@ function ShaderPreview({ shader, onClick, isPlaying, togglePlay, onHover }: {
   );
 }
 
-export function ShaderGalleryComponent() {
+export default function ShaderGallery() {
   const [selectedShader, setSelectedShader] = useState<Shader | null>(null);
   const [playingShader, setPlayingShader] = useState(1); // Start with the first shader playing
   const [hoveredShader, setHoveredShader] = useState<number | null>(null);
