@@ -2,10 +2,12 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Canvas, extend, useFrame, useThree } from '@react-three/fiber'
 import { shaderMaterial, OrbitControls, Points, PointMaterial } from '@react-three/drei'
 import * as THREE from 'three'
+import React from 'react'
 
 type Shader = {
   id: number;
@@ -172,8 +174,6 @@ const SunRaysMaterial = shaderMaterial(
   `
 )
 
-extend({ WarmDaySkyMaterial, AnimatedSunMaterial, SunRaysMaterial })
-
 // Add this type declaration for the custom material
 declare type WarmDaySkyMaterialImpl = {
   uniforms: {
@@ -293,6 +293,10 @@ function SoftLight() {
 }
 
 function WarmDayMeadowScene({ isPlaying }: { isPlaying: boolean }) {
+  useEffect(() => {
+    extend({ WarmDaySkyMaterial, AnimatedSunMaterial, SunRaysMaterial })
+  }, [])
+
   const [time, setTime] = useState(0)
 
   useEffect(() => {

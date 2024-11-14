@@ -1,9 +1,5 @@
-import ShaderGalleryComponent from '@/components/shader-gallery'
+import ShaderGalleryWrapper from '@/components/shader-gallery-wrapper'
 
-export default function Home() {
-  return (
-    <main className="min-h-screen">
-      <ShaderGalleryComponent />
-    </main>
-  )
+export default function Page() {
+  return <ShaderGalleryWrapper />
 }
