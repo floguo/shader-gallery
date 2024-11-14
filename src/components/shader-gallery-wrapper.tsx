@@ -2,11 +2,15 @@
 
 import dynamic from 'next/dynamic'
 
-const ShaderGallery = dynamic(() => import('@/components/shader-gallery'), {
+const ShaderGallery = dynamic(() => import('./shader-gallery'), {
   ssr: false,
-  loading: () => <div>Loading...</div>
+  loading: () => <div>Loading shader gallery...</div>
 })
 
 export default function ShaderGalleryWrapper() {
-  return <ShaderGallery />
+  return (
+    <div style={{ width: '100%', height: '100vh' }}>
+      <ShaderGallery />
+    </div>
+  )
 } 
